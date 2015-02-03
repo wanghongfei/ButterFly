@@ -1,5 +1,5 @@
 ## ButterFly
-ButterFly is a command-line arguments parser that supports multiple standards.
+ButterFly is a command-line arguments parser that supports multiple standards. Java 8 is required.
 
 ### Usage
 ```

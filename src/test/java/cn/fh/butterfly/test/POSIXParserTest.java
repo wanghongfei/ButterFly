@@ -65,7 +65,7 @@ public class POSIXParserTest {
 	@Test
 	public void testMultipleArgsWith() {
 		String[] args = buildArgs("-tal -p 8000 -hm -n 100");
-		Parser p = new POSIXParser(args, new String[] {"-t", "-a", "-l", "-p", "-h", "-m", "-n"});
+		Parser p = new POSIXParser(args, "-t", "-a", "-l", "-p", "-h", "-m", "-n");
 		
 		boolean parmT = p.containsOption("-t");
 		Assert.assertTrue(parmT);

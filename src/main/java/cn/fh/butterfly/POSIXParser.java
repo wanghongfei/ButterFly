@@ -53,7 +53,11 @@ public class POSIXParser implements Parser {
 
 			int indexIncreasement = 2;
 			if (notTheLastElem(ix, len) ) {
+				// take the next parameter as an argument
 				arg = this.argList.get(ix + 1);
+
+				// if the next parameter isn't an argument,
+				// set arg variable to null
 				if (!isArgument(arg)) {
 					arg = null;
 					indexIncreasement = 1;
@@ -65,27 +69,16 @@ public class POSIXParser implements Parser {
 			parseOption(option, arg, map);
 			
 		}
-		
-		
-		
-/*		for (int ix = 0 ; ix < len ; ix += 2) {
-			String option = this.argList.get(ix);
-			String arg = null;
 
-			if (notTheLastElem(ix, len) ) {
-				arg = this.argList.get(ix + 1);
-				if (!isArgument(arg)) {
-					arg = null;
-				}
-			}
-			
-			System.out.println("option:" + option);
-			parseOption(option, arg, map);
-		}*/
 		
 		this.argMap = map;
 	}
 	
+	/**
+	 * 
+	 * @param token
+	 * @return Return true if this is an argument, false if option.
+	 */
 	private boolean isArgument(String token) {
 		return !token.startsWith("-");
 	}
@@ -117,6 +110,8 @@ public class POSIXParser implements Parser {
 	 */
 	private void parseMultipleTokens(String token, Map<String, String> map) {
 		int len = token.length();
+		
+		// start traverse from the first letter
 		for (int ix = 1 ; ix < len ; ++ix) {
 			char ch = token.charAt(ix);
 			

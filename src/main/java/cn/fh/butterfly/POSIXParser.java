@@ -14,9 +14,9 @@ public class POSIXParser implements Parser {
 	 * Construct a POSIXParser object.
 	 * 
 	 * @param args The command-line arguments
-	 * @param tokens The valid options. e.g., {"-t", "-s", "-p"}
+	 * @param tokens Arguments that you are interested in. e.g., {"-t", "-s", "-p"}
 	 */
-	public POSIXParser(String[] args, String[] tokens) {
+	public POSIXParser(String[] args, String... tokens) {
 		if (null == args || null == tokens) {
 			throw new IllegalArgumentException("Array of arguments and tokens cannot be null");
 		}

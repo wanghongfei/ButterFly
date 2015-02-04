@@ -7,7 +7,8 @@ ButterFly is a command-line arguments parser that supports multiple standards. J
 
 	// constrcut the Parser
 	// the second parameter of POSIXParser are an array of arguments that you are interested in.
-	Parser p = new POSIXParser(args, "-t", "-a", "-l", "-p", "-h", "-m", "-n");
+	Parser p = new POSIXParser(args, "-t", "-a", "-l", "-p", "-h", "-m", "-n"); // for POSIX style
+	Parser p = new GUNParser(args, "--t", "--verbose"); // for GUN style
 		
 	// should be true
 	boolean parmT = p.containsOption("-t");
@@ -28,7 +29,7 @@ ButterFly is a command-line arguments parser that supports multiple standards. J
 ```
 
 
-### The POSIX Conventions
+### The POSIX style of command-line arguments
 The POSIX conventions for command-line arguments is supported and its details are summarized bellow:
 
 * An option is a hyphen followed by a single alphanumeric character, like this: -o.
@@ -40,3 +41,5 @@ The POSIX conventions for command-line arguments is supported and its details ar
 * The -- argument terminates options.
 * The - option is typically used to represent one of the standard input streams.
 
+### The GUN style of command-line arguments
+Based on the POSIX style, GUN style adds double-hyphen arguments like '--verbose'.

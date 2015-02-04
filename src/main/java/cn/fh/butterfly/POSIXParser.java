@@ -10,6 +10,11 @@ public class POSIXParser implements Parser {
 	private List<String> optTokenList;
 	private Map<String, String> argMap;
 	
+	protected enum TokenType {
+		SINGLE_HYPHEN,
+		NO_HYPHEN
+	}
+	
 	/**
 	 * Construct a POSIXParser object.
 	 * 
@@ -50,15 +55,19 @@ public class POSIXParser implements Parser {
 		while (ix < len) {
 			String option = this.argList.get(ix);
 			String arg = null;
+			
+			TokenType type = determineTokenType(option);
 
 			int indexIncreasement = 2;
 			if (notTheLastElem(ix, len) ) {
 				// take the next parameter as an argument
 				arg = this.argList.get(ix + 1);
+				TokenType nextType = determineTokenType(arg);
 
 				// if the next parameter isn't an argument,
 				// set arg variable to null
-				if (!isArgument(arg)) {
+				//if (!isArgument(arg)) {
+				if (nextType == TokenType.SINGLE_HYPHEN) {
 					arg = null;
 					indexIncreasement = 1;
 				}
@@ -66,41 +75,56 @@ public class POSIXParser implements Parser {
 
 			ix += indexIncreasement;
 			
-			parseOption(option, arg, map);
+			parseOption(option, arg, type, map);
 			
 		}
 
 		
 		this.argMap = map;
 	}
+
 	
-	/**
-	 * 
-	 * @param token
-	 * @return Return true if this is an argument, false if option.
-	 */
-	private boolean isArgument(String token) {
-		return !token.startsWith("-");
+	private TokenType determineTokenType(String token) {
+		if (token.startsWith("-")) {
+			return TokenType.SINGLE_HYPHEN;
+		}
+		
+		return TokenType.NO_HYPHEN;
 	}
 	
 	private boolean notTheLastElem(int curIndex, int len) {
 		return curIndex + 1 < len;
 	}
 	
-	private void parseOption(String option, String value, Map<String, String> map) {
-		int len = option.length();
+	private boolean isMultipleOptions(String option) {
+		return option.length() > 2;
+	}
+	
+	private void parseOption(String option, String value, TokenType type, Map<String, String> map) {
 		
-		if (len > 2) {
-			// parse string likes '-tla'
-			parseMultipleTokens(option, map);
-		} else if (len == 2) {
-			// string likes '-t'
-			parseSingleToken(option, value, map);
-
+		if (type == TokenType.SINGLE_HYPHEN) {
+			if (isMultipleOptions(option)) {
+				// parse string likes '-tla'
+				parseMultipleTokens(option, map);
+			} else {
+				// string likes '-t'
+				parseSingleToken(option, value, map);
+			}
 		} else {
-			// invalid option
-			// do nothing
+			// other type of option
+			parseOtherType(option, value, map);
 		}
+	}
+	
+	/**
+	 * Derived class can override this method to deal with other type of options.
+	 * 
+	 * @param option
+	 * @param value
+	 * @param type
+	 * @param map
+	 */
+	protected void parseOtherType(String option, String value, Map<String, String> map) {
 	}
 	
 	/**

@@ -12,7 +12,8 @@ public class POSIXParser implements Parser {
 	
 	protected enum TokenType {
 		SINGLE_HYPHEN,
-		NO_HYPHEN
+		NO_HYPHEN,
+		OTHER
 	}
 	
 	/**
@@ -66,8 +67,7 @@ public class POSIXParser implements Parser {
 
 				// if the next parameter isn't an argument,
 				// set arg variable to null
-				//if (!isArgument(arg)) {
-				if (nextType == TokenType.SINGLE_HYPHEN) {
+				if (nextType != TokenType.NO_HYPHEN) {
 					arg = null;
 					indexIncreasement = 1;
 				}
@@ -86,7 +86,13 @@ public class POSIXParser implements Parser {
 	
 	private TokenType determineTokenType(String token) {
 		if (token.startsWith("-")) {
-			return TokenType.SINGLE_HYPHEN;
+			if (token.length() > 1) {
+				if (token.charAt(1) != '-') {
+					return TokenType.SINGLE_HYPHEN;
+				} else {
+					return TokenType.OTHER;
+				}
+			}
 		}
 		
 		return TokenType.NO_HYPHEN;
@@ -112,6 +118,7 @@ public class POSIXParser implements Parser {
 			}
 		} else {
 			// other type of option
+			// let the derived class(if any) tackles this option
 			parseOtherType(option, value, map);
 		}
 	}

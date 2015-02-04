@@ -11,7 +11,13 @@ public class POSIXParser implements Parser {
 	private Map<String, String> argMap;
 	
 	protected enum TokenType {
+		/**
+		 * string likes '-XXX'
+		 */
 		SINGLE_HYPHEN,
+		/**
+		 * string likes 'XXX'
+		 */
 		NO_HYPHEN,
 		OTHER
 	}
@@ -48,19 +54,26 @@ public class POSIXParser implements Parser {
 		return this.argMap.containsKey(option);
 	}
 	
+	/**
+	 * traverse every string in argument list and process.
+	 */
 	private void parse() {
 		Map<String, String> map = new HashMap<>();
 		
 		int len = this.argList.size();
 		int ix = 0;
+		// traverse argument list
 		while (ix < len) {
+			// get the current string
 			String option = this.argList.get(ix);
+			// the next string
 			String arg = null;
 			
 			TokenType type = determineTokenType(option);
 
 			int indexIncreasement = 2;
 			if (notTheLastElem(ix, len) ) {
+				// next element exists
 				// take the next parameter as an argument
 				arg = this.argList.get(ix + 1);
 				TokenType nextType = determineTokenType(arg);
@@ -98,6 +111,12 @@ public class POSIXParser implements Parser {
 		return TokenType.NO_HYPHEN;
 	}
 	
+	/**
+	 * Determine if this is the last element.
+	 * @param curIndex
+	 * @param len
+	 * @return
+	 */
 	private boolean notTheLastElem(int curIndex, int len) {
 		return curIndex + 1 < len;
 	}
